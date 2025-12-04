@@ -1,12 +1,11 @@
 <?php
 /**
  * Debug Query - Test the exact database query
+ * Must buffer output until after init.php to preserve sessions
  */
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-header('Content-Type: text/plain');
-echo "=== Query Debug ===\n\n";
+// Buffer ALL output - nothing before this
+ob_start();
 
 const DEBUG = 1;
 const MYSQL_DEBUG = 0;
@@ -16,13 +15,17 @@ const ALTUMCODE = 66;
 
 require_once __DIR__ . '/app/init.php';
 
-// Start session
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    @session_start();
-}
+// Now we can output
+ob_end_clean();
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+header('Content-Type: text/plain');
+
+echo "=== Query Debug ===\n\n";
 
 if (!isset($_SESSION['user_id'])) {
-    die("Not logged in. Log in first, then visit this page.\n");
+    die("Not logged in. Log in first at /login, then visit this page.\n");
 }
 
 $user_id = $_SESSION['user_id'];
