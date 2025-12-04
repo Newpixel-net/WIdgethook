@@ -24,9 +24,7 @@ class AdminPaymentCreate extends Controller {
 
     public function index() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         /* Requested plan details */
         $plans = (new \Altum\Models\Plan())->get_plans();

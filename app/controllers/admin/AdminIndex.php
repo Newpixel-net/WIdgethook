@@ -74,12 +74,9 @@ class AdminIndex extends Controller {
         $track_conversions = db()->getValue('track_conversions', 'MAX(`id`)');
         $users = db()->getValue('users', 'count(`user_id`)');
 
-        if(in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            $payments = db()->getValue('payments', 'count(`id`)');
-            $payments_total_amount = db()->getValue('payments', 'sum(`total_amount_default_currency`)');
-        } else {
-            $payments = $payments_total_amount = 0;
-        }
+        /* License check removed for standalone installation */
+        $payments = db()->getValue('payments', 'count(`id`)');
+        $payments_total_amount = db()->getValue('payments', 'sum(`total_amount_default_currency`)');
 
         /* Widgets stats: current month */
         $campaigns_current_month = db()->where('datetime', date('Y-m-01'), '>=')->getValue('campaigns', 'count(*)');
@@ -88,8 +85,8 @@ class AdminIndex extends Controller {
         $track_logs_current_month = db()->where('datetime', date('Y-m-01'), '>=')->getValue('track_logs', 'count(*)');
         $track_conversions_current_month = db()->where('datetime', date('Y-m-01'), '>=')->getValue('track_conversions', 'count(*)');
         $users_current_month = db()->where('datetime', date('Y-m-01'), '>=')->getValue('users', 'count(*)');
-        $payments_current_month = in_array(settings()->license->type, ['Extended License', 'extended']) ? db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'count(*)') : 0;
-        $payments_amount_current_month = in_array(settings()->license->type, ['Extended License', 'extended']) ? db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'sum(`total_amount_default_currency`)') : 0;
+        $payments_current_month = db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'count(*)');
+        $payments_amount_current_month = db()->where('datetime', date('Y-m-01'), '>=')->getValue('payments', 'sum(`total_amount_default_currency`)');
 
         /* Get currently active users */
         $fifteen_minutes_ago_datetime = (new \DateTime())->modify('-15 minutes')->format('Y-m-d H:i:s');

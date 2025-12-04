@@ -24,9 +24,7 @@ class AdminTaxes extends Controller {
 
     public function index() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         /* Prepare the filtering system */
         $filters = (new \Altum\Filters(['type', 'value_type', 'billing_type'], ['name', 'description'], ['tax_id', 'name', 'value', 'datetime']));
@@ -78,9 +76,7 @@ class AdminTaxes extends Controller {
 
     public function bulk() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -129,9 +125,7 @@ class AdminTaxes extends Controller {
 
     public function delete() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         $tax_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
