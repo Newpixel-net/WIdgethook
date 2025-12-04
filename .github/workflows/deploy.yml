@@ -31,8 +31,12 @@ jobs:
               git fetch origin main
               git reset --hard origin/main
             else
-              echo "First deployment, cloning repository..."
-              git clone --branch main https://github.com/${{ github.repository }}.git .
+              echo "First deployment, initializing repository..."
+              # Initialize git in existing directory (handles non-empty folders)
+              git init
+              git remote add origin https://github.com/${{ github.repository }}.git
+              git fetch origin main
+              git checkout -f main
             fi
 
             echo "Deployment completed at $(date)"
