@@ -15,6 +15,9 @@ const ALTUMCODE = 66;
 
 require_once __DIR__ . '/app/init.php';
 
+// Start session using the app's session helper (this handles all the logic)
+session_start_if_not_started();
+
 // Now we can output
 ob_end_clean();
 
@@ -24,11 +27,11 @@ header('Content-Type: text/plain');
 
 echo "=== Query Debug ===\n\n";
 
-if (!isset($_SESSION['user_id'])) {
+// Use session_get helper which properly handles sessions
+$user_id = session_get('user_id');
+if (!$user_id) {
     die("Not logged in. Log in first at /login, then visit this page.\n");
 }
-
-$user_id = $_SESSION['user_id'];
 echo "User ID: {$user_id}\n\n";
 
 // Get user
