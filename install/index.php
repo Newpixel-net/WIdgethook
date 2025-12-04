@@ -99,10 +99,10 @@ if(file_exists(ROOT . 'install/installed')) {
                                     <tbody>
                                     <tr>
                                         <td>PHP Version</td>
-                                        <td>8.3 - 8.4</td>
+                                        <td>8.1+</td>
                                         <td><?= PHP_VERSION ?></td>
                                         <td class="text-right">
-                                            <?php if(version_compare(PHP_VERSION, '8.3.0', '>=') && version_compare(PHP_VERSION, '8.5', '<')): ?>
+                                            <?php if(version_compare(PHP_VERSION, '8.1.0', '>=')): ?>
                                                 ✅
                                             <?php else: ?>
                                                 ❌
