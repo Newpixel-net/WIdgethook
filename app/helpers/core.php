@@ -85,6 +85,9 @@ function currency() {
 }
 
 function cache($adapter = 'adapter') {
+    if(!\Altum\Cache::$adapter) {
+        \Altum\Cache::initialize();
+    }
     return \Altum\Cache::${$adapter};
 }
 
