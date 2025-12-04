@@ -217,7 +217,7 @@
                 </div>
 
                 <div class="mt-2 text-break">
-                    <a href="<?= in_array(settings()->license->type, ['Extended License', 'extended']) ? url('admin/payments') : url('admin/settings/payment') ?>" class="stretched-link text-reset text-decoration-none">
+                    <a href="<?= url('admin/payments') ?>" class="stretched-link text-reset text-decoration-none">
                         <span class="h4" id="payments">
                             <span class="spinner-border spinner-border-sm" role="status"></span>
                         </span>
@@ -250,7 +250,7 @@
                 </div>
 
                 <div class="mt-2 text-break">
-                    <a href="<?= in_array(settings()->license->type, ['Extended License', 'extended']) ? url('admin/payments') : url('admin/settings/payment') ?>" class="stretched-link text-reset text-decoration-none">
+                    <a href="<?= url('admin/payments') ?>" class="stretched-link text-reset text-decoration-none">
                         <span class="h4" id="payments_total_amount">
                             <span class="spinner-border spinner-border-sm" role="status"></span>
                         </span>
@@ -435,7 +435,7 @@
 <?php endif ?>
 
 
-<?php if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])): ?>
+<?php /* License check removed for standalone installation */ ?>
     <?php $result = database()->query("SELECT `payments`.*, `users`.`name` AS `user_name`, `users`.`email` AS `user_email`, `users`.`avatar` AS `user_avatar` FROM `payments` LEFT JOIN `users` ON `payments`.`user_id` = `users`.`user_id` ORDER BY `id` DESC LIMIT 5"); ?>
 
     <?php if($result->num_rows): ?>
@@ -564,7 +564,6 @@
             </div>
         </div>
     <?php endif ?>
-<?php endif ?>
 
 <div class="row justify-content-between">
     <div class="col-12 col-sm-6 col-xl-4 p-3 position-relative">

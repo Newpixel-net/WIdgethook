@@ -102,7 +102,7 @@
                     <input id="plan_expiration_date" type="text" class="form-control-plaintext" value="<?= \Altum\Date::get($data->user->plan_expiration_date, 1) ?>" readonly />
                 </div>
 
-                <?php if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])): ?>
+                <?php /* License check removed for standalone installation */ ?>
                     <div class="form-group">
                         <label for="payment_processor" class="font-weight-bold"><i class="fas fa-fw fa-sm fa-money-check-alt text-muted mr-1"></i> <?= l('admin_users.payment_processor') ?></label>
                         <input id="payment_processor" type="text" class="form-control-plaintext" value="<?= $data->user->payment_processor ? l('pay.custom_plan.' . $data->user->payment_processor) : l('global.none') ?>" readonly />
@@ -127,7 +127,6 @@
                         <label for="plan_expiry_reminder" class="font-weight-bold"><i class="fas fa-fw fa-sm fa-business-time text-muted mr-1"></i> <?= l('admin_users.plan_expiry_reminder') ?></label>
                         <input id="plan_expiry_reminder" type="text" class="form-control-plaintext" value="<?= $data->user->plan_expiry_reminder ? l('global.yes') : l('global.no') ?>" readonly />
                     </div>
-                <?php endif ?>
             </div>
         </div>
     </div>
@@ -222,7 +221,7 @@
     </div>
 </div>
 
-<?php if(in_array(settings()->license->type, ['Extended License', 'extended']) && settings()->payment->is_enabled && settings()->payment->taxes_and_billing_is_enabled): ?>
+<?php /* License check removed for standalone installation */ if(settings()->payment->is_enabled && settings()->payment->taxes_and_billing_is_enabled): ?>
     <div class="accordion">
         <div class="card">
             <div class="card-body p-3 position-relative">
@@ -444,7 +443,7 @@
     </div>
     <?php endif ?>
 
-    <?php if(in_array(settings()->license->type, ['SPECIAL', 'Extended License', 'extended'])): ?>
+    <?php /* License check removed for standalone installation */ ?>
         <div class="col-12 col-sm-6 p-3 position-relative">
             <div class="card d-flex flex-row h-100 overflow-hidden">
                 <div class="card-body">
@@ -458,7 +457,6 @@
                 </div>
             </div>
         </div>
-    <?php endif ?>
 
     <?php if(\Altum\Plugin::is_active('teams')): ?>
         <div class="col-12 col-sm-6 p-3 position-relative">
