@@ -216,6 +216,7 @@ CREATE TABLE IF NOT EXISTS `track_logs` (
 DROP TABLE IF EXISTS `track_notifications`;
 CREATE TABLE IF NOT EXISTS `track_notifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
   `campaign_id` int(11) DEFAULT NULL,
   `notification_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL DEFAULT '',
@@ -224,7 +225,8 @@ CREATE TABLE IF NOT EXISTS `track_notifications` (
   PRIMARY KEY (`id`),
   KEY `notification_id` (`notification_id`),
   KEY `track_notifications_date_index` (`datetime`),
-  KEY `track_notifications_campaign_id_index` (`campaign_id`)
+  KEY `track_notifications_campaign_id_index` (`campaign_id`),
+  KEY `track_notifications_user_id_index` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
