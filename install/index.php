@@ -32,9 +32,7 @@ if(file_exists(ROOT . 'install/installed')) {
             <div class="d-flex flex-column justify-content-center">
                 <h1>Installation</h1>
                 <p class="subheader d-flex flex-row">
-                    <span class="text-muted">
-                        <a href="<?= PRODUCT_URL ?>" target="_blank" class="text-gray-500"><?= PRODUCT_NAME ?></a> by <a href="https://altumco.de/site" target="_blank" class="text-gray-500">AltumCode</a>
-                    </span>
+                    <span class="text-muted"><?= PRODUCT_NAME ?></span>
                 </p>
             </div>
         </div>
@@ -77,9 +75,9 @@ if(file_exists(ROOT . 'install/installed')) {
                         <section id="welcome" style="display: none">
                             <h2 class="mb-4">Welcome</h2>
 
-                            <p>Thank you for choosing the <a href="https://altumco.de/site" target="_blank">AltumCode</a> brand 🤗.</p>
+                            <p>Welcome to the <?= PRODUCT_NAME ?> installation wizard.</p>
 
-                            <p>By continuing with the installation process, you are agreeing to the privacy policy and terms of service of <?= PRODUCT_NAME ?>, which are mentioned in their respective pages on <a href="<?= PRODUCT_URL ?>" target="_blank"><?= PRODUCT_URL ?></a> 📜.</p>
+                            <p>This wizard will guide you through the installation process. Make sure you have your database details ready.</p>
 
                             <a href="#requirements" id="welcome_start" class="navigator btn btn-block btn-primary mt-4">Start the installation</a>
                         </section>
@@ -220,12 +218,6 @@ if(file_exists(ROOT . 'install/installed')) {
 
                             <form id="setup_form" method="post" action="" role="form">
                                 <div class="form-group">
-                                    <label for="license_key">License key</label>
-                                    <input type="text" class="form-control" id="license_key" name="license_key" required="required">
-                                    <small class="form-text text-muted">The unique license key that you got after purchasing.</small>
-                                </div>
-
-                                <div class="form-group">
                                     <label for="installation_url">Website URL</label>
                                     <input type="text" class="form-control" id="installation_url" name="installation_url" value="<?= $installation_url ?>" placeholder="https://example.com/" required="required">
                                     <small class="form-text text-muted">Make sure to specify the full url of the installation path of the product.<br /> Subdomain example: <code>https://subdomain.domain.com/</code> <br />Subfolder example: <code>https://domain.com/product/</code></small>
@@ -254,24 +246,6 @@ if(file_exists(ROOT . 'install/installed')) {
                                     <input type="password" class="form-control" id="database_password" name="database_password">
                                 </div>
 
-
-                                <h3 class="mt-5">Keep in touch</h3>
-                                <p>Subscribe to the newsletter and you will receive email updates of <strong>new products</strong>, <strong>discounts</strong> and <strong>product updates</strong>.</p>
-
-                                <div class="form-group row">
-                                    <label for="newsletter_email" class="col-sm-2 col-form-label">Email</label>
-                                    <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="newsletter_email" name="newsletter_email" placeholder="Your valid email address">
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="newsletter_name" class="col-sm-2 col-form-label">Name</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="newsletter_name" name="newsletter_name" placeholder="Your full name">
-                                    </div>
-                                </div>
-                                <p class="text-muted"><small>Leave the fields empty if you do not wish to subscribe to the newsletter.</small></p>
 
                                 <button type="submit" name="submit" class="btn btn-block btn-primary mt-4">Finish installation</button>
                             </form>
