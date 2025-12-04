@@ -57,9 +57,21 @@ jobs:
               cp config.sample.php config.php
             fi
 
+            # Clear OPcache via PHP CLI (if available)
+            echo "=== Clearing OPcache ==="
+            if command -v php &> /dev/null; then
+              php -r "if(function_exists('opcache_reset')) { opcache_reset(); echo 'OPcache cleared via CLI\n'; } else { echo 'OPcache not available in CLI\n'; }"
+            fi
+
+            # Touch files to invalidate OPcache (some configurations use file mtime)
+            echo "Touching critical files..."
+            touch app/init.php app/core/Controller.php app/traits/Paramsable.php 2>/dev/null || true
+
             # Verify deployment
             echo "=== Verification ==="
             echo "Git HEAD: $(git rev-parse HEAD)"
             echo "Config file exists: $([ -f config.php ] && echo 'YES' || echo 'NO')"
+            echo ""
+            echo "NOTE: If dashboard issues persist, visit /reset_cache.php?key=widgethook_reset_2024"
 
             echo "=== Deployment completed at $(date) ==="

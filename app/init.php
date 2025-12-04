@@ -56,20 +56,28 @@ spl_autoload_register (function ($class) {
         return;
     }
 
-    /* Altum core */
-    if(isset($split[1]) && !isset($split[2])) {
-        require_once APP_PATH . 'core/' . $split[1] . '.php';
-    }
+    $file = null;
 
-    /* Traits, Models, Helpers */
+    /* Traits, Models, Helpers - check this FIRST (before core) to properly handle namespaced classes */
     if(isset($split[1], $split[2]) && in_array($split[1], ['Traits', 'Models', 'Helpers'])) {
         $folder = mb_strtolower($split[1]);
-        require_once APP_PATH . $folder . '/' . $split[2] . '.php';
+        $file = APP_PATH . $folder . '/' . $split[2] . '.php';
+    }
+    /* Payment Gateways helpers */
+    elseif(isset($split[1], $split[2]) && $split[1] == 'PaymentGateways') {
+        $file = APP_PATH . 'helpers/payment-gateways/' . $split[2] . '.php';
+    }
+    /* Altum core - only for two-part namespaces like Altum\Router */
+    elseif(isset($split[1]) && !isset($split[2])) {
+        $file = APP_PATH . 'core/' . $split[1] . '.php';
     }
 
-    /* Payment Gateways helpers */
-    if(isset($split[1], $split[2]) && $split[1] == 'PaymentGateways') {
-        require_once APP_PATH . 'helpers/payment-gateways/' . $split[2] . '.php';
+    if($file) {
+        if(file_exists($file)) {
+            require_once $file;
+        } elseif(defined('DEBUG') && DEBUG) {
+            error_log("Autoloader: File not found for class {$class}: {$file}");
+        }
     }
 });
 
