@@ -28,6 +28,12 @@ jobs:
             cd ${{ secrets.DEPLOY_PATH }}
             echo "Current directory: $(pwd)"
 
+            # IMPORTANT: Backup config.php before any git operations
+            if [ -f "config.php" ]; then
+              echo "Backing up config.php..."
+              cp config.php config.php.backup
+            fi
+
             # Check if git repo exists
             if [ -d ".git" ]; then
               echo "Repository exists, pulling latest changes..."
@@ -42,20 +48,18 @@ jobs:
               git checkout -f main
             fi
 
+            # IMPORTANT: Restore config.php after git operations
+            if [ -f "config.php.backup" ]; then
+              echo "Restoring config.php from backup..."
+              mv config.php.backup config.php
+            elif [ -f "config.sample.php" ] && [ ! -f "config.php" ]; then
+              echo "Creating config.php from sample (first deployment)..."
+              cp config.sample.php config.php
+            fi
+
             # Verify deployment
             echo "=== Verification ==="
             echo "Git HEAD: $(git rev-parse HEAD)"
-            echo "Git log:"
-            git log --oneline -3
-            echo ""
-            echo "Checking install/index.php for PHP version:"
-            grep -n "8\\.1" install/index.php || echo "8.1 NOT FOUND in file"
-            grep -n "8\\.3" install/index.php || echo "8.3 NOT FOUND in file"
-            echo ""
-            echo "File modification times:"
-            ls -la install/index.php
-
-            # Create a deployment marker file
-            echo "Deployed: $(date) | Commit: $(git rev-parse --short HEAD)" > deploy_marker.txt
+            echo "Config file exists: $([ -f config.php ] && echo 'YES' || echo 'NO')"
 
             echo "=== Deployment completed at $(date) ==="

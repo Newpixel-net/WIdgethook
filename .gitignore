@@ -1,0 +1,27 @@
+# Configuration file (contains database credentials)
+config.php
+
+# Debug files
+debug_error.php
+deploy_test.php
+deploy_marker.txt
+
+# Cache files
+uploads/cache/*
+!uploads/cache/.gitkeep
+
+# Logs
+uploads/logs/*
+!uploads/logs/.gitkeep
+
+# User uploads (optional - uncomment if you don't want to track uploads)
+# uploads/main/*
+# uploads/users/*
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
