@@ -24,9 +24,7 @@ class AdminCodeCreate extends Controller {
 
     public function index() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         set_time_limit(0);
 

@@ -24,9 +24,7 @@ class AdminTaxesImport extends Controller {
 
     public function index() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         if(!empty($_POST)) {
             //ALTUMCODE:DEMO if(DEMO) Alerts::add_error('This command is blocked on the demo.');

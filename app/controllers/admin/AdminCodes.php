@@ -24,9 +24,7 @@ class AdminCodes extends Controller {
 
     public function index() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         /* Prepare the filtering system */
         $filters = (new \Altum\Filters(['type'], ['name', 'code'], ['code_id', 'name', 'days', 'quantity', 'datetime', 'code', 'redeemed']));
@@ -78,9 +76,7 @@ class AdminCodes extends Controller {
 
     public function bulk() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         /* Check for any errors */
         if(empty($_POST)) {
@@ -128,9 +124,7 @@ class AdminCodes extends Controller {
 
     public function delete() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         $code_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 

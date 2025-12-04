@@ -34,7 +34,7 @@ class AdminUserView extends Controller {
         /* Get widget stats */
         $campaigns = db()->where('user_id', $user_id)->getValue('campaigns', 'count(`campaign_id`)');
         $notifications = db()->where('user_id', $user_id)->getValue('notifications', 'count(`notification_id`)');
-        $payments = in_array(settings()->license->type, ['Extended License', 'extended']) ? db()->where('user_id', $user_id)->getValue('payments', 'count(`id`)') : 0;
+        $payments = db()->where('user_id', $user_id)->getValue('payments', 'count(`id`)');
         $domains = db()->where('user_id', $user_id)->getValue('domains', 'count(`domain_id`)');
         $notification_handlers = db()->where('user_id', $user_id)->getValue('notification_handlers', 'count(`notification_handler_id`)');
         $email_reports = db()->where('user_id', $user_id)->getValue('email_reports', 'count(`id`)');

@@ -24,9 +24,7 @@ class AdminTaxUpdate extends Controller {
 
     public function index() {
 
-        if(!in_array(settings()->license->type, ['Extended License', 'extended'])) {
-            redirect('admin');
-        }
+        /* License check removed for standalone installation */
 
         $tax_id = isset($this->params[0]) ? (int) $this->params[0] : null;
 
