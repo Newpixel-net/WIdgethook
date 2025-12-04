@@ -1,0 +1,38 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Check if git repo exists
+            if [ -d ".git" ]; then
+              echo "Repository exists, pulling latest changes..."
+              git fetch origin main
+              git reset --hard origin/main
+            else
+              echo "First deployment, cloning repository..."
+              git clone --branch main https://github.com/${{ github.repository }}.git .
+            fi
+
+            echo "Deployment completed at $(date)"
