@@ -107,29 +107,8 @@ foreach ($helpers as $helper) {
     }
 }
 
-// Step 6: Load core classes first
-echo "\n[6] Loading core classes...\n";
-try {
-    require_once APP_PATH . 'core/Controller.php';
-    echo "    [OK] Controller.php\n";
-    require_once APP_PATH . 'core/Model.php';
-    echo "    [OK] Model.php\n";
-} catch (Throwable $e) {
-    echo "    [ERROR] " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n";
-}
-
-// Step 7: Load vendor autoloader
-echo "\n[7] Loading vendor autoloader...\n";
-try {
-    require_once ROOT_PATH . 'vendor/autoload.php';
-    echo "    [OK] Vendor autoloader loaded\n";
-} catch (Throwable $e) {
-    echo "    [ERROR] " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n";
-    die();
-}
-
-// Step 8: Register custom autoloader
-echo "\n[8] Registering custom autoloader...\n";
+// Step 6: Register custom autoloader FIRST (before loading Controller.php!)
+echo "\n[6] Registering custom autoloader...\n";
 try {
     spl_autoload_register(function ($class) {
         $namespace_prefix = 'Altum';
@@ -159,8 +138,50 @@ try {
     echo "    [ERROR] " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n";
 }
 
-// Step 9: Test database connection
-echo "\n[9] Testing database connection...\n";
+// Step 7: Check if traits directory and files exist
+echo "\n[7] Checking traits directory...\n";
+$traits_dir = APP_PATH . 'traits/';
+if (is_dir($traits_dir)) {
+    echo "    [OK] Traits directory exists: {$traits_dir}\n";
+    $trait_files = glob($traits_dir . '*.php');
+    foreach ($trait_files as $tf) {
+        echo "    [OK] Found: " . basename($tf) . "\n";
+    }
+
+    // Specifically check Paramsable.php
+    if (file_exists($traits_dir . 'Paramsable.php')) {
+        echo "    [OK] Paramsable.php exists\n";
+    } else {
+        echo "    [ERROR] Paramsable.php NOT FOUND - THIS IS THE PROBLEM!\n";
+    }
+} else {
+    echo "    [ERROR] Traits directory NOT FOUND: {$traits_dir}\n";
+    echo "    THIS IS LIKELY THE CAUSE OF THE 500 ERROR!\n";
+}
+
+// Step 8: Load core classes
+echo "\n[8] Loading core classes...\n";
+try {
+    require_once APP_PATH . 'core/Controller.php';
+    echo "    [OK] Controller.php\n";
+    require_once APP_PATH . 'core/Model.php';
+    echo "    [OK] Model.php\n";
+} catch (Throwable $e) {
+    echo "    [ERROR] " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n";
+}
+
+// Step 9: Load vendor autoloader
+echo "\n[9] Loading vendor autoloader...\n";
+try {
+    require_once ROOT_PATH . 'vendor/autoload.php';
+    echo "    [OK] Vendor autoloader loaded\n";
+} catch (Throwable $e) {
+    echo "    [ERROR] " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n";
+    die();
+}
+
+// Step 10: Test database connection
+echo "\n[10] Testing database connection...\n";
 try {
     $mysqli = new mysqli(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME);
     if ($mysqli->connect_error) {
@@ -185,7 +206,7 @@ try {
     echo "    [ERROR] " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine() . "\n";
 }
 
-// Step 10: Initialize Cache
+// Step 11: Initialize Cache
 echo "\n[10] Initializing Cache...\n";
 try {
     \Altum\Cache::initialize();
@@ -195,7 +216,7 @@ try {
     echo "    Stack trace:\n" . $e->getTraceAsString() . "\n";
 }
 
-// Step 11: Initialize Plugin system
+// Step 12: Initialize Plugin system
 echo "\n[11] Initializing Plugin system...\n";
 try {
     \Altum\Plugin::initialize();
@@ -206,7 +227,7 @@ try {
     echo "    Stack trace:\n" . $e->getTraceAsString() . "\n";
 }
 
-// Step 12: Test settings() function
+// Step 13: Test settings() function
 echo "\n[12] Testing settings() function...\n";
 try {
     $settings = settings();
@@ -272,7 +293,7 @@ try {
     echo "    Stack trace:\n" . $e->getTraceAsString() . "\n";
 }
 
-// Step 13: Initialize Language
+// Step 14: Initialize Language
 echo "\n[13] Initializing Language system...\n";
 try {
     \Altum\Language::initialize();
@@ -284,7 +305,7 @@ try {
     echo "    Stack trace:\n" . $e->getTraceAsString() . "\n";
 }
 
-// Step 14: Check users in database
+// Step 15: Check users in database
 echo "\n[14] Checking users in database...\n";
 try {
     $mysqli = new mysqli(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME);
@@ -305,7 +326,7 @@ try {
     echo "    [ERROR] " . $e->getMessage() . "\n";
 }
 
-// Step 15: Test Router parsing
+// Step 16: Test Router parsing
 echo "\n[15] Testing Router...\n";
 try {
     $_GET['altum'] = '';  // Simulate homepage
