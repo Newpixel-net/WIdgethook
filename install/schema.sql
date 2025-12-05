@@ -308,7 +308,7 @@ INSERT INTO `settings` (`key`, `value`) VALUES
 ('logo', ''),
 ('opengraph', ''),
 ('plan_custom', '{"plan_id":"custom","name":"Custom","status":1}'),
-('plan_free', '{"plan_id":"free","name":"Free","days":null,"status":1,"settings":{"no_ads":false,"removable_branding":false,"custom_branding":false,"api_is_enabled":true,"affiliate_is_enabled":false,"campaigns_limit":5,"notifications_limit":25,"notifications_impressions_limit":100000,"notification_handlers_limit":5,"domains_limit":1,"enabled_notifications":{"INFORMATIONAL":true,"COUPON":true,"LIVE_COUNTER":true,"EMAIL_COLLECTOR":true,"LATEST_CONVERSION":true,"CONVERSIONS_COUNTER":true,"VIDEO":true,"SOCIAL_SHARE":true,"RANDOM_REVIEW":true,"EMOJI_FEEDBACK":true,"COOKIE_NOTIFICATION":true,"SCORE_FEEDBACK":true,"REQUEST_COLLECTOR":true,"COUNTDOWN_COLLECTOR":true,"INFORMATIONAL_BAR":true,"IMAGE":true,"COLLECTOR_BAR":true,"COUPON_BAR":true,"BUTTON_BAR":true,"COLLECTOR_MODAL":true,"COLLECTOR_TWO_MODAL":true,"BUTTON_MODAL":true,"TEXT_FEEDBACK":true,"ENGAGEMENT_LINKS":true}}}'),
+('plan_free', '{"plan_id":"free","name":"Free","days":null,"status":1,"settings":{"no_ads":false,"removable_branding":false,"custom_branding":false,"api_is_enabled":true,"affiliate_is_enabled":false,"campaigns_limit":5,"notifications_limit":25,"notifications_impressions_limit":100000,"notification_handlers_limit":5,"domains_limit":1,"teams_limit":1,"team_members_limit":1,"email_reports_is_enabled":true,"track_notifications_retention":-1,"notification_handlers_email_limit":-1,"notification_handlers_webhook_limit":-1,"notification_handlers_slack_limit":-1,"notification_handlers_discord_limit":-1,"notification_handlers_telegram_limit":-1,"notification_handlers_microsoft_teams_limit":-1,"notification_handlers_twilio_limit":-1,"notification_handlers_twilio_call_limit":-1,"notification_handlers_whatsapp_limit":-1,"notification_handlers_x_limit":-1,"notification_handlers_google_chat_limit":-1,"notification_handlers_push_subscriber_id_limit":-1,"notification_handlers_internal_notification_limit":-1,"active_notification_handlers_per_resource_limit":-1,"export":{"csv":true,"json":true,"pdf":true},"enabled_notifications":{"INFORMATIONAL":true,"COUPON":true,"LIVE_COUNTER":true,"EMAIL_COLLECTOR":true,"CONVERSIONS":true,"CONVERSIONS_COUNTER":true,"VIDEO":true,"AUDIO":true,"SOCIAL_SHARE":true,"REVIEWS":true,"EMOJI_FEEDBACK":true,"COOKIE_NOTIFICATION":true,"SCORE_FEEDBACK":true,"REQUEST_COLLECTOR":true,"COUNTDOWN_COLLECTOR":true,"CUSTOM_HTML":true,"INFORMATIONAL_BAR":true,"IMAGE":true,"COLLECTOR_BAR":true,"COUPON_BAR":true,"BUTTON_BAR":true,"COLLECTOR_MODAL":true,"COLLECTOR_TWO_MODAL":true,"BUTTON_MODAL":true,"TEXT_FEEDBACK":true,"ENGAGEMENT_LINKS":true,"WHATSAPP_CHAT":true,"CONTACT_US":true,"INFORMATIONAL_MINI":true,"INFORMATIONAL_BAR_MINI":true}}}'),
 ('payment', '{"is_enabled":false,"brand_name":"WidgetHook","currency":"USD"}'),
 ('paypal', '{"is_enabled":false,"mode":"sandbox","client_id":"","secret":""}'),
 ('stripe', '{"is_enabled":false,"publishable_key":"","secret_key":"","webhook_secret":""}'),
@@ -493,6 +493,129 @@ CREATE TABLE IF NOT EXISTS `users_logs` (
   `datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `users_logs_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `broadcasts`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `broadcasts`;
+CREATE TABLE IF NOT EXISTS `broadcasts` (
+  `broadcast_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL DEFAULT '',
+  `subject` varchar(128) NOT NULL DEFAULT '',
+  `content` text DEFAULT NULL,
+  `segment` varchar(64) NOT NULL DEFAULT 'all',
+  `settings` text DEFAULT NULL,
+  `users_ids` text DEFAULT NULL,
+  `sent_users_ids` text DEFAULT NULL,
+  `sent_emails` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `total_emails` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `views` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `clicks` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `status` varchar(16) NOT NULL DEFAULT 'draft',
+  `last_sent_email_datetime` datetime DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`broadcast_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `blog_posts_categories`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `blog_posts_categories`;
+CREATE TABLE IF NOT EXISTS `blog_posts_categories` (
+  `blog_posts_category_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `url` varchar(256) NOT NULL DEFAULT '',
+  `title` varchar(256) NOT NULL DEFAULT '',
+  `description` varchar(256) DEFAULT '',
+  `language` varchar(32) DEFAULT NULL,
+  `order` int(11) NOT NULL DEFAULT 0,
+  `datetime` datetime DEFAULT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`blog_posts_category_id`),
+  KEY `url` (`url`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `blog_posts`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `blog_posts`;
+CREATE TABLE IF NOT EXISTS `blog_posts` (
+  `blog_post_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `blog_posts_category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `url` varchar(256) NOT NULL DEFAULT '',
+  `title` varchar(256) NOT NULL DEFAULT '',
+  `description` varchar(512) DEFAULT '',
+  `keywords` varchar(256) DEFAULT '',
+  `image` varchar(40) DEFAULT NULL,
+  `image_description` varchar(256) DEFAULT NULL,
+  `editor` varchar(16) DEFAULT 'blocks',
+  `content` longtext DEFAULT NULL,
+  `language` varchar(32) DEFAULT NULL,
+  `total_views` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+  `total_ratings` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `average_rating` float DEFAULT 0,
+  `is_published` tinyint(4) NOT NULL DEFAULT 0,
+  `datetime` datetime DEFAULT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`blog_post_id`),
+  KEY `blog_posts_category_id` (`blog_posts_category_id`),
+  KEY `url` (`url`(191)),
+  KEY `is_published` (`is_published`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `blog_posts_ratings`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `blog_posts_ratings`;
+CREATE TABLE IF NOT EXISTS `blog_posts_ratings` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `blog_post_id` bigint(20) UNSIGNED NOT NULL,
+  `ip_binary` varbinary(16) DEFAULT NULL,
+  `rating` tinyint(4) NOT NULL,
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `blog_post_id` (`blog_post_id`),
+  KEY `ip_binary` (`ip_binary`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `teams`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `teams`;
+CREATE TABLE IF NOT EXISTS `teams` (
+  `team_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL DEFAULT '',
+  `datetime` datetime DEFAULT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`team_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `teams_members`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `teams_members`;
+CREATE TABLE IF NOT EXISTS `teams_members` (
+  `team_member_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_email` varchar(320) NOT NULL DEFAULT '',
+  `access` text DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `datetime` datetime DEFAULT NULL,
+  `last_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`team_member_id`),
+  KEY `team_id` (`team_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
