@@ -60,7 +60,7 @@
 
         <?= \Altum\Event::get_content('head') ?>
 
-        <?php if(is_logged_in() && isset(user()->plan_settings->export) && !user()->plan_settings->export->pdf): ?>
+        <?php if(is_logged_in() && isset(user()->plan_settings->export->pdf) && !user()->plan_settings->export->pdf): ?>
             <style>@media print { body { display: none; } }</style>
         <?php endif ?>
 

@@ -246,27 +246,27 @@ class App {
             \Altum\Authentication::$user = $user;
 
             /* White label */
-            if(settings()->main->white_labeling_is_enabled && $user->plan_settings->white_labeling_is_enabled && \Altum\Router::$controller_key != 'invoice' && \Altum\Router::$path != 'admin') {
-                if($user->preferences->white_label_title) settings()->main->title = $user->preferences->white_label_title;
+            if((settings()->main->white_labeling_is_enabled ?? false) && ($user->plan_settings->white_labeling_is_enabled ?? false) && \Altum\Router::$controller_key != 'invoice' && \Altum\Router::$path != 'admin') {
+                if($user->preferences->white_label_title ?? null) settings()->main->title = $user->preferences->white_label_title;
 
-                if($user->preferences->white_label_logo_light) {
+                if($user->preferences->white_label_logo_light ?? null) {
                     settings()->main->logo_light = $user->preferences->white_label_logo_light;
                     settings()->main->logo_light_full_url = \Altum\Uploads::get_full_url('users') . settings()->main->logo_light;
                 }
 
-                if($user->preferences->white_label_logo_dark) {
+                if($user->preferences->white_label_logo_dark ?? null) {
                     settings()->main->logo_dark = $user->preferences->white_label_logo_dark;
                     settings()->main->logo_dark_full_url = \Altum\Uploads::get_full_url('users') . settings()->main->logo_dark;
                 }
 
-                if($user->preferences->white_label_favicon) {
+                if($user->preferences->white_label_favicon ?? null) {
                     settings()->main->favicon = $user->preferences->white_label_favicon;
                     settings()->main->favicon_full_url = \Altum\Uploads::get_full_url('users') . settings()->main->favicon;
                 }
             }
 
             /* Custom plan limit notice */
-            if($user->plan_settings->notifications_impressions_limit != -1 && $user->current_month_notifications_impressions > $user->plan_settings->notifications_impressions_limit && !isset($_COOKIE['plan_notifications_impressions_limit_notice'])) {
+            if(($user->plan_settings->notifications_impressions_limit ?? -1) != -1 && ($user->current_month_notifications_impressions ?? 0) > ($user->plan_settings->notifications_impressions_limit ?? -1) && !isset($_COOKIE['plan_notifications_impressions_limit_notice'])) {
                 Alerts::add_warning('<strong>' . l('global.notifications.user_notifications_impressions_limit.title') . '</strong>' . (settings()->payment->is_enabled ? '<br />' . sprintf(l('global.notifications.user_notifications_impressions_limit.description'), '<a href="' . url('plan') . '" class="font-weight-bold">', '</a>') : null));
                 setcookie('plan_notifications_impressions_limit_notice', 1, time()+60*60*24*1, COOKIE_PATH);
             }
@@ -274,7 +274,7 @@ class App {
 
 
         /* Maintenance mode */
-        if(settings()->main->maintenance_is_enabled && (!is_logged_in() || $user->type != 1) && !in_array(\Altum\Router::$controller_key, ['maintenance', 'login', 'lost-password', 'reset-password'])) {
+        if((settings()->main->maintenance_is_enabled ?? false) && (!is_logged_in() || $user->type != 1) && !in_array(\Altum\Router::$controller_key, ['maintenance', 'login', 'lost-password', 'reset-password'])) {
             header('HTTP/1.1 503 Service Unavailable');
             header('Retry-After: 3600');
             header('Location: ' . url('maintenance'));
@@ -296,14 +296,14 @@ class App {
 
         /* Redirect based on browser language if needed */
         $browser_language_code = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? mb_substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : null;
-        if(settings()->main->auto_language_detection_is_enabled && \Altum\Router::$controller_settings['no_browser_language_detection'] == false && !\Altum\Router::$language_code && !is_logged_in() && $browser_language_code && Language::$default_code != $browser_language_code && array_search($browser_language_code, Language::$active_languages)) {
+        if((settings()->main->auto_language_detection_is_enabled ?? false) && \Altum\Router::$controller_settings['no_browser_language_detection'] == false && !\Altum\Router::$language_code && !is_logged_in() && $browser_language_code && Language::$default_code != $browser_language_code && array_search($browser_language_code, Language::$active_languages)) {
             if(!isset($_SERVER['HTTP_REFERER']) || (isset($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'])['host'] != parse_url(SITE_URL, PHP_URL_HOST))) {
                 header('Location: ' . SITE_URL . $browser_language_code . '/' . \Altum\Router::$original_request . (\Altum\Router::$original_request_query ? '?' . \Altum\Router::$original_request_query : null));
             }
         }
 
         /* Force HTTPS is needed */
-        if(settings()->main->force_https_is_enabled && !is_https_request() && php_sapi_name() != 'cli' && string_starts_with('https://', SITE_URL)) {
+        if((settings()->main->force_https_is_enabled ?? false) && !is_https_request() && php_sapi_name() != 'cli' && string_starts_with('https://', SITE_URL)) {
             header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301); die();
         }
 

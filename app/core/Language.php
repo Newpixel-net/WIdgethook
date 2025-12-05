@@ -57,10 +57,10 @@ class Language {
             $language = [
                 'name' => $file_name_exploded[0],
                 'code' => $file_name_exploded[1],
-                'status' => settings()->languages->{$file_name_exploded[0]}->status ?? true,
+                'status' => (isset(settings()->languages) && isset(settings()->languages->{$file_name_exploded[0]})) ? (settings()->languages->{$file_name_exploded[0]}->status ?? true) : true,
                 'content' => null,
-                'order' => settings()->languages->{$file_name_exploded[0]}->order ?? 1,
-                'language_flag' => settings()->languages->{$file_name_exploded[0]}->language_flag ?? '',
+                'order' => (isset(settings()->languages) && isset(settings()->languages->{$file_name_exploded[0]})) ? (settings()->languages->{$file_name_exploded[0]}->order ?? 1) : 1,
+                'language_flag' => (isset(settings()->languages) && isset(settings()->languages->{$file_name_exploded[0]})) ? (settings()->languages->{$file_name_exploded[0]}->language_flag ?? '') : '',
             ];
 
             self::$languages[$language['name']] = $language;
