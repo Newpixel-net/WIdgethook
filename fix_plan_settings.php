@@ -79,20 +79,25 @@ $required_plan_settings = [
     ],
 
     'enabled_notifications' => [
+        // Default notification types (from notifications.php)
         'INFORMATIONAL' => true,
         'COUPON' => true,
         'LIVE_COUNTER' => true,
         'EMAIL_COLLECTOR' => true,
-        'LATEST_CONVERSION' => true,
+        'CONVERSIONS' => true,           // Correct name (was LATEST_CONVERSION)
         'CONVERSIONS_COUNTER' => true,
         'VIDEO' => true,
+        'AUDIO' => true,                 // Added - was missing
         'SOCIAL_SHARE' => true,
-        'RANDOM_REVIEW' => true,
+        'REVIEWS' => true,               // Correct name (was RANDOM_REVIEW)
         'EMOJI_FEEDBACK' => true,
         'COOKIE_NOTIFICATION' => true,
         'SCORE_FEEDBACK' => true,
         'REQUEST_COLLECTOR' => true,
         'COUNTDOWN_COLLECTOR' => true,
+        'CUSTOM_HTML' => true,
+
+        // Pro notification types (from pro-notifications plugin)
         'INFORMATIONAL_BAR' => true,
         'IMAGE' => true,
         'COLLECTOR_BAR' => true,
@@ -103,7 +108,12 @@ $required_plan_settings = [
         'BUTTON_MODAL' => true,
         'TEXT_FEEDBACK' => true,
         'ENGAGEMENT_LINKS' => true,
-        'CUSTOM_HTML' => true,
+
+        // Additional pro types that may be needed
+        'WHATSAPP_CHAT' => true,
+        'CONTACT_US' => true,
+        'INFORMATIONAL_MINI' => true,
+        'INFORMATIONAL_BAR_MINI' => true,
     ]
 ];
 
