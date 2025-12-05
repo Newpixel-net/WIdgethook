@@ -54,6 +54,30 @@ $required_plan_settings = [
     'team_members_limit' => -1,
     'email_reports_is_enabled' => true,
     'track_notifications_retention' => -1,
+
+    // Per-type notification handler limits (CRITICAL - these are dynamically accessed)
+    'notification_handlers_email_limit' => -1,
+    'notification_handlers_webhook_limit' => -1,
+    'notification_handlers_slack_limit' => -1,
+    'notification_handlers_discord_limit' => -1,
+    'notification_handlers_telegram_limit' => -1,
+    'notification_handlers_microsoft_teams_limit' => -1,
+    'notification_handlers_twilio_limit' => -1,
+    'notification_handlers_twilio_call_limit' => -1,
+    'notification_handlers_whatsapp_limit' => -1,
+    'notification_handlers_x_limit' => -1,
+    'notification_handlers_google_chat_limit' => -1,
+    'notification_handlers_push_subscriber_id_limit' => -1,
+    'notification_handlers_internal_notification_limit' => -1,
+    'active_notification_handlers_per_resource_limit' => -1,
+
+    // Export permissions (CRITICAL - accessed by wrapper views)
+    'export' => (object)[
+        'csv' => true,
+        'json' => true,
+        'pdf' => true,
+    ],
+
     'enabled_notifications' => [
         'INFORMATIONAL' => true,
         'COUPON' => true,
