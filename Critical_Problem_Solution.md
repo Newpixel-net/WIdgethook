@@ -109,8 +109,13 @@ Delete these diagnostic scripts from production after confirming the site works:
 - `test_real_init.php`
 - `test_autoloader.php`
 - `diagnose.php`
+- `debug_login_redirect.php`
+- `check_all_tables.php`
 
 ---
 
-## Key Lesson
-**Always ensure database schema matches code expectations before deployment.** When code references new database columns, those columns must exist in the production database before the code is deployed.
+## Key Lessons
+
+1. **Always ensure database schema matches code expectations before deployment.** When code references new database columns, those columns must exist in the production database before the code is deployed.
+
+2. **Clear browser/server cache after fixing errors.** 500 error responses can be cached by browsers or CDNs (CloudFlare, Varnish, etc.), causing the error to persist even after the fix is applied. Always clear cache or test in incognito mode after applying fixes.
