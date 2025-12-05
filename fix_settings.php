@@ -1,106 +1,180 @@
 <?php
-/*
- * Fix Settings Script
- * Repairs missing payment and other settings
- * Access via: https://landingo.net/fix_settings.php
- * DELETE THIS FILE AFTER RUNNING
+/**
+ * Fix Missing Settings
+ * Adds missing settings entries to the database
+ *
+ * Access: /fix_settings.php?key=widgethook_reset_2024&fix=1
  */
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+define('FIX_KEY', 'widgethook_reset_2024');
 
-echo "<h1>Fix Settings</h1>";
-echo "<pre>";
-
-define('ALTUMCODE', true);
-require_once 'config.php';
-
-$mysqli = new mysqli(DATABASE_SERVER, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_NAME);
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $mysqli->connect_error);
+if (!isset($_GET['key']) || $_GET['key'] !== FIX_KEY) {
+    http_response_code(403);
+    die('Unauthorized. Usage: fix_settings.php?key=widgethook_reset_2024&fix=1');
 }
 
-echo "Connected to database.\n\n";
+ob_start();
 
-// Get current payment settings
-$result = $mysqli->query("SELECT `value` FROM `settings` WHERE `key` = 'payment'");
-$row = $result->fetch_assoc();
-$current = $row ? json_decode($row['value'], true) : [];
+const DEBUG = 1;
+const MYSQL_DEBUG = 0;
+const LOGGING = 0;
+const CACHE = 1;
+const ALTUMCODE = 66;
 
-echo "Current payment settings:\n";
-print_r($current);
-echo "\n";
+require_once __DIR__ . '/app/init.php';
 
-// Define proper defaults
-$defaults = [
-    'is_enabled' => true,
-    'type' => 'both',
-    'default_currency' => 'USD',
-    'currencies' => ['USD'],
-    'taxes_and_billing_is_enabled' => false,
-    'invoice_is_enabled' => false,
-    'codes_is_enabled' => true,
-    'paypal' => ['is_enabled' => false],
-    'stripe' => ['is_enabled' => false],
-    'offline_payment' => ['is_enabled' => false],
-    'currency_exchange_api_key' => ''
+ob_end_clean();
+
+header('Content-Type: text/plain');
+echo "=== Fix Missing Settings ===\n\n";
+
+$dry_run = !isset($_GET['fix']);
+
+if ($dry_run) {
+    echo "DRY RUN MODE - Add &fix=1 to actually make changes\n\n";
+}
+
+// Required settings with default values
+$required_settings = [
+    'linkedin' => json_encode([
+        'is_enabled' => false,
+        'client_id' => '',
+        'client_secret' => ''
+    ]),
+    'microsoft' => json_encode([
+        'is_enabled' => false,
+        'client_id' => '',
+        'client_secret' => ''
+    ]),
+    'facebook' => json_encode([
+        'is_enabled' => false,
+        'app_id' => '',
+        'app_secret' => ''
+    ]),
+    'google' => json_encode([
+        'is_enabled' => false,
+        'client_id' => '',
+        'client_secret' => ''
+    ]),
+    'twitter' => json_encode([
+        'is_enabled' => false,
+        'consumer_api_key' => '',
+        'consumer_api_secret' => ''
+    ]),
+    'discord' => json_encode([
+        'is_enabled' => false,
+        'client_id' => '',
+        'client_secret' => ''
+    ]),
+    'captcha' => json_encode([
+        'type' => 'basic',
+        'login_is_enabled' => false,
+        'register_is_enabled' => false,
+        'lost_password_is_enabled' => false,
+        'resend_activation_is_enabled' => false,
+        'recaptcha_public_key' => '',
+        'recaptcha_private_key' => '',
+        'hcaptcha_site_key' => '',
+        'hcaptcha_secret_key' => '',
+        'turnstile_site_key' => '',
+        'turnstile_secret_key' => ''
+    ]),
+    'users' => json_encode([
+        'register_is_enabled' => true,
+        'email_confirmation' => false,
+        'welcome_email_is_enabled' => false,
+        'login_rememberme_checkbox_is_checked' => true,
+        'login_rememberme_cookie_days' => 30,
+        'login_lockout_is_enabled' => false,
+        'login_lockout_max_retries' => 5,
+        'login_lockout_time' => 15,
+        'blacklisted_domains' => [],
+        'blacklisted_countries' => [],
+        'blacklisted_ips' => [],
+        'register_social_login_require_password' => false
+    ]),
+    'email_notifications' => json_encode([
+        'new_user' => false,
+        'new_payment' => false,
+        'emails' => ''
+    ]),
+    'webhooks' => json_encode([
+        'user_new' => '',
+        'user_delete' => ''
+    ]),
+    'internal_notifications' => json_encode([
+        'users_is_enabled' => true,
+        'admins_is_enabled' => true,
+        'new_user' => false,
+        'new_payment' => false
+    ]),
+    'offload' => json_encode([
+        'assets_url' => '',
+        'uploads_url' => '',
+        'cdn_assets_url' => '',
+        'cdn_uploads_url' => ''
+    ])
 ];
 
-// Merge with existing (keeping existing values where they exist)
-$fixed = array_merge($defaults, $current ?: []);
+$issues_found = 0;
+$issues_fixed = 0;
 
-// Ensure critical values are set
-if (empty($fixed['default_currency'])) {
-    $fixed['default_currency'] = 'USD';
-}
-if (!isset($fixed['is_enabled'])) {
-    $fixed['is_enabled'] = true;
-}
-if (empty($fixed['currencies'])) {
-    $fixed['currencies'] = ['USD'];
+// Get existing settings
+$existing_keys = [];
+$result = database()->query("SELECT `key` FROM `settings`");
+while ($row = $result->fetch_object()) {
+    $existing_keys[] = $row->key;
 }
 
-$json = json_encode($fixed);
-echo "Fixed payment settings:\n";
-print_r($fixed);
-echo "\n";
+echo "Existing settings keys: " . implode(', ', $existing_keys) . "\n\n";
 
-// Update the database
-$stmt = $mysqli->prepare("UPDATE `settings` SET `value` = ? WHERE `key` = 'payment'");
-$stmt->bind_param('s', $json);
+foreach ($required_settings as $key => $value) {
+    echo "Checking setting: {$key}\n";
 
-if ($stmt->execute()) {
-    echo "SUCCESS: Payment settings updated!\n";
-} else {
-    echo "ERROR: " . $stmt->error . "\n";
+    if (in_array($key, $existing_keys)) {
+        echo "   EXISTS - OK\n\n";
+    } else {
+        $issues_found++;
+        echo "   MISSING";
+
+        if (!$dry_run) {
+            $stmt = database()->prepare("INSERT INTO `settings` (`key`, `value`) VALUES (?, ?)");
+            $stmt->bind_param('ss', $key, $value);
+            $result = $stmt->execute();
+
+            if ($result) {
+                echo " -> ADDED!\n\n";
+                $issues_fixed++;
+            } else {
+                echo " -> ERROR: " . database()->error . "\n\n";
+            }
+        } else {
+            echo "\n\n";
+        }
+    }
 }
 
-// Also check/fix internal_notifications settings
-$result = $mysqli->query("SELECT `value` FROM `settings` WHERE `key` = 'internal_notifications'");
-$row = $result->fetch_assoc();
-if (!$row) {
-    echo "\nAdding missing internal_notifications setting...\n";
-    $internal = json_encode([
-        'admins_is_enabled' => true,
-        'users_is_enabled' => true,
-        'new_user' => true,
-        'new_payment' => true
-    ]);
-    $mysqli->query("INSERT INTO `settings` (`key`, `value`) VALUES ('internal_notifications', '$internal')");
-    echo "Added internal_notifications setting.\n";
+// Clear settings cache
+if (!$dry_run && $issues_fixed > 0) {
+    echo "Clearing settings cache...\n";
+    try {
+        $cache_instance = cache()->getItem('settings');
+        cache()->deleteItem('settings');
+        echo "   Cache cleared!\n\n";
+    } catch (Exception $e) {
+        echo "   Cache clear error: " . $e->getMessage() . "\n\n";
+    }
 }
 
-// Verify
-echo "\n=== Verification ===\n";
-$result = $mysqli->query("SELECT `value` FROM `settings` WHERE `key` = 'payment'");
-$row = $result->fetch_assoc();
-$verified = json_decode($row['value']);
-echo "payment->is_enabled: " . ($verified->is_enabled ? 'true' : 'false') . "\n";
-echo "payment->default_currency: " . $verified->default_currency . "\n";
+echo "=== Summary ===\n";
+echo "Issues found: {$issues_found}\n";
+if (!$dry_run) {
+    echo "Issues fixed: {$issues_fixed}\n";
+}
 
-$mysqli->close();
+if ($dry_run && $issues_found > 0) {
+    echo "\nTo fix these issues, run:\n";
+    echo "fix_settings.php?key=widgethook_reset_2024&fix=1\n";
+}
 
-echo "\n=== DONE ===\n";
-echo "Now go back to your admin dashboard and refresh!\n";
-echo "Remember to DELETE this file when done.\n";
-echo "</pre>";
+echo "\n=== Done ===\n";
