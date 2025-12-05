@@ -292,8 +292,8 @@ CREATE TABLE IF NOT EXISTS `settings` (
 -- --------------------------------------------------------
 
 INSERT INTO `settings` (`key`, `value`) VALUES
-('main', '{"title":"WidgetHook","default_language":"english","default_theme_style":"light","default_timezone":"UTC","index_url":"","terms_and_conditions_url":"","privacy_policy_url":"","not_found_url":"","se_indexing":true,"default_results_per_page":10,"default_order_type":"ASC","chart_days":30,"chart_cache":12,"api_is_enabled":true,"admin_spotlight_is_enabled":true,"user_spotlight_is_enabled":true,"breadcrumbs_is_enabled":true,"display_index_testimonials":true,"display_index_plans":true,"display_index_faq":true,"white_labeling_is_enabled":false}'),
-('users', '{"email_confirmation":false,"register_is_enabled":true,"auto_delete_inactive_users":0,"user_deletion_reminder":0,"login_rememberme_checkbox_is_checked":true,"login_rememberme_cookie_days":30,"login_lockout_is_enabled":false,"login_lockout_max_retries":5,"login_lockout_time":15,"blacklisted_domains":[],"blacklisted_countries":[],"blacklisted_ips":[],"welcome_email_is_enabled":false,"register_social_login_require_password":false,"lost_password_lockout_is_enabled":false,"lost_password_lockout_max_retries":5,"lost_password_lockout_time":15,"register_lockout_is_enabled":false,"register_lockout_max_registrations":3,"register_lockout_time":7,"email_aliases_is_enabled":true,"register_only_social_logins":false,"register_display_newsletter_checkbox":false}'),
+('main', '{"title":"WidgetHook","default_language":"english","default_theme_style":"light","default_timezone":"UTC","index_url":"","terms_and_conditions_url":"","privacy_policy_url":"","not_found_url":"","se_indexing":true,"default_results_per_page":10,"default_order_type":"ASC"}'),
+('users', '{"email_confirmation":false,"register_is_enabled":true,"auto_delete_inactive_users":0,"user_deletion_reminder":0,"login_rememberme_checkbox_is_checked":true,"login_rememberme_cookie_days":30,"login_lockout_is_enabled":false,"login_lockout_max_retries":5,"login_lockout_time":15,"blacklisted_domains":[],"blacklisted_countries":[],"blacklisted_ips":[],"welcome_email_is_enabled":false,"register_social_login_require_password":false}'),
 ('ads', '{"header":"","footer":""}'),
 ('captcha', '{"type":"basic","recaptcha_public_key":"","recaptcha_private_key":"","hcaptcha_site_key":"","hcaptcha_secret_key":"","turnstile_site_key":"","turnstile_secret_key":"","login_is_enabled":false,"register_is_enabled":true,"lost_password_is_enabled":true,"resend_activation_is_enabled":true,"contact_is_enabled":"1"}'),
 ('cron', '{"key":"","cron_datetime":"","reset_date":""}'),
@@ -331,7 +331,6 @@ INSERT INTO `settings` (`key`, `value`) VALUES
 ('internal_notifications', '{"admins_is_enabled":true,"users_is_enabled":true,"new_user":true,"new_payment":true,"new_newsletter_subscriber":false,"new_domain":false}'),
 ('offload', '{"assets_url":"","uploads_url":"","cdn_assets_url":"","cdn_uploads_url":""}'),
 ('cookie_consent', '{}'),
-('content', '{"blog_is_enabled":true,"blog_share_is_enabled":true,"blog_search_widget_is_enabled":true,"blog_categories_widget_is_enabled":true,"blog_popular_widget_is_enabled":true,"blog_views_is_enabled":true,"blog_ratings_is_enabled":true,"blog_columns":2,"pages_is_enabled":true,"pages_share_is_enabled":true,"pages_popular_widget_is_enabled":true,"pages_views_is_enabled":true}'),
 ('license', '{"license":"standalone","type":"Extended License"}'),
 ('product_info', '{"version":"53.0.0", "code":"5300"}');
 
