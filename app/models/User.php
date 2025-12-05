@@ -38,14 +38,14 @@ class User extends Model {
 
             if($data) {
 
-                /* Parse the users plan settings */
-                $data->plan_settings = json_decode($data->plan_settings ?? '');
+                /* Parse the users plan settings - ensure it's always an object */
+                $data->plan_settings = json_decode($data->plan_settings ?? '{}') ?: new \stdClass();
 
-                /* Parse billing details if existing */
-                $data->billing = json_decode($data->billing ?? '');
+                /* Parse billing details if existing - ensure it's always an object */
+                $data->billing = json_decode($data->billing ?? '{}') ?: new \stdClass();
 
-                /* Parse preferences if existing */
-                $data->preferences = json_decode($data->preferences ?? '');
+                /* Parse preferences if existing - ensure it's always an object */
+                $data->preferences = json_decode($data->preferences ?? '{}') ?: new \stdClass();
 
                 /* Save to cache */
                 cache()->save(
