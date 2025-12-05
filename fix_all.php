@@ -415,6 +415,21 @@ $required_settings = [
         'cdn_assets_url' => '',
         'cdn_uploads_url' => ''
     ],
+    // Content setting (CRITICAL - required for blog and pages to work)
+    'content' => [
+        'blog_is_enabled' => true,
+        'blog_share_is_enabled' => true,
+        'blog_search_widget_is_enabled' => true,
+        'blog_categories_widget_is_enabled' => true,
+        'blog_popular_widget_is_enabled' => true,
+        'blog_views_is_enabled' => true,
+        'blog_ratings_is_enabled' => true,
+        'blog_columns' => 2,
+        'pages_is_enabled' => true,
+        'pages_share_is_enabled' => true,
+        'pages_popular_widget_is_enabled' => true,
+        'pages_views_is_enabled' => true,
+    ],
 ];
 
 // Settings that need specific properties added/updated
@@ -433,6 +448,31 @@ $settings_updates = [
     ],
     'email_notifications' => [
         'new_domain' => false,
+    ],
+    // Main settings - add missing properties
+    'main' => [
+        'chart_days' => 30,
+        'chart_cache' => 12,
+        'api_is_enabled' => true,
+        'admin_spotlight_is_enabled' => true,
+        'user_spotlight_is_enabled' => true,
+        'breadcrumbs_is_enabled' => true,
+        'display_index_testimonials' => true,
+        'display_index_plans' => true,
+        'display_index_faq' => true,
+        'white_labeling_is_enabled' => false,
+    ],
+    // Users settings - add missing properties
+    'users' => [
+        'lost_password_lockout_is_enabled' => false,
+        'lost_password_lockout_max_retries' => 5,
+        'lost_password_lockout_time' => 15,
+        'register_lockout_is_enabled' => false,
+        'register_lockout_max_registrations' => 3,
+        'register_lockout_time' => 7,
+        'email_aliases_is_enabled' => true,
+        'register_only_social_logins' => false,
+        'register_display_newsletter_checkbox' => false,
     ],
 ];
 
